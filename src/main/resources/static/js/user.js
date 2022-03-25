@@ -8,10 +8,41 @@ $("#btn-login").click(() => {
     login();
 });
 
+let id = $("#id").val();
+$("#btn-update").click(() => {
+    update();
+});
+
 
 // 2. 기능
 
-// 유저네임 기억하기 메서드 httpOnly 속성이 걸려 있으면 안 된다. 주의하자!!
+// 회원정보 수정 함수
+async function update() {
+    let id = $("#id").val();
+    let updateDto = {
+        password: $("#password").val(),
+        email: $("#email").val(),
+        addr: $("#addr").val()
+    }
+
+    let response = await fetch(`/s/api/user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(updateDto),
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    });
+    let responseParse = await response.json();
+
+    if (responseParse.code == 1) {
+        alert("회원정보 수정 완료");
+        location.href = `/s/user/${id}`;
+    } else {
+        alert("회원정보 수정 실패");
+    }
+}
+
+// 유저네임 기억하기 함수 httpOnly 속성이 걸려 있으면 안 된다. 주의하자!!
 function usernameRemember() {
     let cookies = document.cookie.split("=");
     // console.log(cookies[1]);
@@ -19,7 +50,7 @@ function usernameRemember() {
 }
 usernameRemember();
 
-// 회원가입 요청 메서드
+// 회원가입 요청 함수
 async function join() {
     // (1) jquery로 username, password, email, addr 을 찾아서 자바스크립트 오브젝트로 만들기
     let joinDto = {
@@ -48,7 +79,7 @@ async function join() {
     }
 }
 
-// 로그인 요청 메서드
+// 로그인 요청 함수
 async function login() {
 
     // checkbot의 체크여부를 제이쿼리에서 확인하는 법
