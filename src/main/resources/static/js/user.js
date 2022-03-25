@@ -11,6 +11,14 @@ $("#btn-login").click(() => {
 
 // 2. 기능
 
+// 유저네임 기억하기 메서드 httpOnly 속성이 걸려 있으면 안 된다. 주의하자!!
+function usernameRemember() {
+    let cookies = document.cookie.split("=");
+    // console.log(cookies[1]);
+    $("#username").val(cookies[1]);
+}
+usernameRemember();
+
 // 회원가입 요청 메서드
 async function join() {
     // (1) jquery로 username, password, email, addr 을 찾아서 자바스크립트 오브젝트로 만들기
@@ -22,7 +30,7 @@ async function join() {
     }
 
     // (2) fetch 요청하기 (json으로 변환해서)
-    let response = await fetch("/api/join", {
+    let response = await fetch("/join", {
         method: "POST",
         body: JSON.stringify(joinDto),
         headers: {
@@ -42,14 +50,21 @@ async function join() {
 
 // 로그인 요청 메서드
 async function login() {
+
+    // checkbot의 체크여부를 제이쿼리에서 확인하는 법
+    let checked = $('#remember').is(':checked');
+    // console.log(checked);
+
     // (1) jquery로 username, password 를 찾아서 자바스크립트 오브젝트로 만들기
     let loginDto = {
         username: $("#username").val(),
-        password: $("#password").val()
+        password: $("#password").val(),
+        remember: checked ? "on" : "off" // 삼항연산자
     }
+    // console.log(loginDto);
     
     // (2) fetch 요청하기 (json으로 변환해서)
-    let response = await fetch("/api/login", {
+    let response = await fetch("/login", {
         method: "POST",
         body: JSON.stringify(loginDto),
         headers: {
@@ -57,6 +72,7 @@ async function login() {
         }
     });
     let responseParse = await response.json();
+    console.log(responseParse);
     
     // (3) 회원가입이 잘되면 알림창 띄우고 로그인 페이지로 이동하기
     if (responseParse.code == 1) {

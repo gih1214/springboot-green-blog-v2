@@ -24,6 +24,11 @@ public class UserController {
 
     @GetMapping("/loginForm")
     public String loginForm() {
+
+        // 쿠키 로직 (이제 이렇게 안 쓰고 자바스크립트로 처리)
+        // String cookieValue = request.getHeader("Cookie");
+        // System.out.println(cookieValue);
+
         return "user/loginForm";
     }
 }

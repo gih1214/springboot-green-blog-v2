@@ -1,5 +1,6 @@
 package site.metacoding.blogv2.web.api;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class UserApiController {
     private final HttpSession session;
 
     // 회원가입
-    @PostMapping("/api/join")
+    @PostMapping("/join")
     public ResponseDto<String> join(@RequestBody JoinDto joinDto) {
         // System.out.println(joinDto);
         userService.회원가입(joinDto);
@@ -31,13 +32,26 @@ public class UserApiController {
     }
 
     // 로그인
-    @PostMapping("/api/login")
-    public ResponseDto<String> login(@RequestBody LoginDto loginDto) {
+    @PostMapping("/login")
+    public ResponseDto<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         User userEntity = userService.로그인(loginDto);
 
         if (userEntity == null) {
             return new ResponseDto<String>(-1, "로그인실패", null);
         }
+
+        // 쿠키 로직
+        if (loginDto.getRemember().equals("on")) {
+            response.addHeader("Set-Cookie", "remember=" + loginDto.getUsername() + "; path=/");
+        }
+        // response.addHeader("Set-Cookie", "remember=" + loginDto.getUsername() + ";
+        // path=/; httpOnly=true");
+        // response.addHeader("Set-Cookie", "path/=");
+
+        // addHeader 대신 addCookie 사용 가능
+        // Cookie cookie = new Cookie("remember", loginDto.getUsername());
+        // cookie.setPath("/");
+        // response.addCookie(cookie);
 
         session.setAttribute("principal", userEntity);
         return new ResponseDto<String>(1, "로그인성공", null);

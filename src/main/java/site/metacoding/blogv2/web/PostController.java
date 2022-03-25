@@ -1,6 +1,7 @@
 package site.metacoding.blogv2.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
 import site.metacoding.blogv2.service.PostService;
@@ -12,4 +13,9 @@ import site.metacoding.blogv2.service.PostService;
 @Controller
 public class PostController {
     private final PostService postService;
+
+    @GetMapping({ "/", "/post" }) // post 테이블에 있는 애들 다 주세요
+    public String home() {
+        return "post/list";
+    }
 }
