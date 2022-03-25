@@ -3,6 +3,7 @@ package site.metacoding.blogv2.web.api;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,19 +26,19 @@ public class UserApiController {
 
     // 회원가입
     @PostMapping("/join")
-    public ResponseDto<String> join(@RequestBody JoinDto joinDto) {
+    public ResponseDto<?> join(@RequestBody JoinDto joinDto) {
         // System.out.println(joinDto);
         userService.회원가입(joinDto);
-        return new ResponseDto<String>(1, "회원가입성공", null);
+        return new ResponseDto<>(1, "회원가입성공", null);
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseDto<String> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
+    public ResponseDto<?> login(@RequestBody LoginDto loginDto, HttpServletResponse response) {
         User userEntity = userService.로그인(loginDto);
 
         if (userEntity == null) {
-            return new ResponseDto<String>(-1, "로그인실패", null);
+            return new ResponseDto<>(-1, "로그인실패", null);
         }
 
         // 쿠키 로직
@@ -54,6 +55,15 @@ public class UserApiController {
         // response.addCookie(cookie);
 
         session.setAttribute("principal", userEntity);
-        return new ResponseDto<String>(1, "로그인성공", null);
+        return new ResponseDto<>(1, "로그인성공", null);
     }
+
+    // 회원가입 페이지주세요, 회원가입할게요, 로그인페이지주세요, 로그인할게요
+    // 로그아웃할게요 -> 인증주소 안 붙여도 됨. /s
+    @GetMapping("/logout")
+    public ResponseDto<?> logout() {
+        session.invalidate();
+        return new ResponseDto<>(1, "성공", null);
+    }
+
 }

@@ -36,9 +36,9 @@ public class UserController {
     }
 
     // 로그아웃
-    @GetMapping("/logout")
-    public String logout() {
-        session.invalidate(); // 세션 무효화 (세션 아이디 영역의 데이터를 다 삭제해)
-        return "redirect:/";
-    }
+    // @GetMapping("/logout")
+    // public String logout() {
+    // session.invalidate(); // 세션 무효화 (세션 아이디 영역의 데이터를 다 삭제해)
+    // return "redirect:/";
+    // }
 }
