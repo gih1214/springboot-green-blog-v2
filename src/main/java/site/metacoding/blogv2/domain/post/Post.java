@@ -15,7 +15,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.ColumnDefault;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -49,7 +50,7 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    @ColumnDefault("0")
+    // @ColumnDefault("0") 쓰지말자!! DB에 insert가 안 된다!..
     @Column(nullable = false)
     private Integer pageCount; // 조회수
 
@@ -57,7 +58,8 @@ public class Post {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @OneToMany(mappedBy = "post") // 연관관계의 주인의 변수명 // 양방향 매핑이 됐음
+    @JsonIgnoreProperties({ "post" }) // messageConverter에게 알려주는 어노테이션
+    @OneToMany(mappedBy = "post") // 연관관계의 주인의 변수명 // 양방향 매핑, 리스트 기본패치전략 lazy
     private List<Comment> comments; // 역방향 매핑
 
     @CreatedDate
