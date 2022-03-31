@@ -1,5 +1,7 @@
 package site.metacoding.blogv2.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,16 @@ import site.metacoding.blogv2.domain.post.PostRepository;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    public Post 글상세보기(Integer id) {
+        Optional<Post> postOp = postRepository.findById(id);
+
+        if (postOp.isPresent()) {
+            return postOp.get();
+        } else {
+            throw new RuntimeException("해당 게시글을 찾을 수 없습니다.");
+        }
+    }
 
     public Page<Post> 게시글목록(Integer page) {
         PageRequest pq = PageRequest.of(page, 3, Sort.by(Direction.DESC, "id")); // 최신글부터 보기
