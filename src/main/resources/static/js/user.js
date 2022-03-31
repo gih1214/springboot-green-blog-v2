@@ -8,6 +8,7 @@ $("#btn-login").click(() => {
     login();
 });
 
+// 회원정보 이벤트 리스너
 let id = $("#id").val();
 $("#btn-update").click(() => {
     update();
@@ -41,14 +42,6 @@ async function update() {
         alert("회원정보 수정 실패");
     }
 }
-
-// 유저네임 기억하기 함수 httpOnly 속성이 걸려 있으면 안 된다. 주의하자!!
-function usernameRemember() {
-    let cookies = document.cookie.split("=");
-    // console.log(cookies[1]);
-    $("#username").val(cookies[1]);
-}
-usernameRemember();
 
 // 회원가입 요청 함수
 async function join() {
