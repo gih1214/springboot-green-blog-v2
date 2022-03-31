@@ -29,6 +29,7 @@
         let id = $("#id").val();
         let response = await fetch(`/s/api/user/${id}`);
         let responseParse = await response.json();
+        console.log(responseParse);
         if (responseParse.code == 1) {
             // CSR 시작
             $("#username").val(responseParse.data.username);
